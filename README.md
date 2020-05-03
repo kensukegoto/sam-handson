@@ -1,5 +1,22 @@
 # SAM CLI
 
+# OutputsでAPI Gatewayのエンドポイントを表示させる
+
+**TranslateAPI**という論理名を作ったらOutputsにて **${TranslateAPI}** でAPIのIDを取得出来る
+
+```YAML
+  TranslateAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: translate-api-2
+      StageName: dev
+      EndpointConfiguration: REGIONAL
+Outputs:
+  TranslateAPI:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${TranslateAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/translate/"
+```
+
 # インストール
 
 https://docs.aws.amazon.com/ja_jp/serverless-application-model/latest/developerguide/serverless-sam-cli-install-linux.html

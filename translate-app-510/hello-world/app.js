@@ -3,10 +3,12 @@ const Translate = new AWS.Translate({region: "ap-northeast-1"});
 
 exports.lambdaHandler = async (event, context) => {
 
+    console.log(event);
+
     let output_text;
 
     try {
-        const input_text = "今晩は！";
+        const input_text = event.queryStringParameters.text;
 
         output_text = await new Promise(resolve => {
             let params = {
@@ -23,7 +25,8 @@ exports.lambdaHandler = async (event, context) => {
                     resolve(data);
                 }
             });
-        })
+        });
+
 
     } catch (err) {
         console.log(err);

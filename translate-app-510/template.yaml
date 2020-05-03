@@ -5,14 +5,13 @@ Description: >
 
   Sample SAM Template for translate-app-510
   
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 3
 
 Resources:
   HelloWorldFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: hello-world/
       Handler: app.lambdaHandler
@@ -21,17 +20,20 @@ Resources:
       MemorySize: 256
       Policies:
         - TranslateFullAccess
-
+      Events:
+        GetApi:
+          Type: Api
+          Properties:
+            Path: /translate
+            Method: get
+            RestApiId: !Ref TranslateAPI # !RefはFn::Subの短縮記載。続く文字列は変数
+  TranslateAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: translate-api-2
+      StageName: dev
+      EndpointConfiguration: REGIONAL
 Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
+  TranslateAPI:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+    Value: !Sub "https://${TranslateAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/translate/"

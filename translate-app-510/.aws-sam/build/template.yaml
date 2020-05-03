@@ -19,20 +19,22 @@ Resources:
       MemorySize: 256
       Policies:
       - TranslateFullAccess
+      Events:
+        GetApi:
+          Type: Api
+          Properties:
+            Path: /translate
+            Method: get
+            RestApiId:
+              Ref: TranslateAPI
+  TranslateAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: translate-api-2
+      StageName: dev
+      EndpointConfiguration: REGIONAL
 Outputs:
-  HelloWorldApi:
+  TranslateAPI:
     Description: API Gateway endpoint URL for Prod stage for Hello World function
     Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/
-  HelloWorldFunction:
-    Description: Hello World Lambda Function ARN
-    Value:
-      Fn::GetAtt:
-      - HelloWorldFunction
-      - Arn
-  HelloWorldFunctionIamRole:
-    Description: Implicit IAM Role created for Hello World function
-    Value:
-      Fn::GetAtt:
-      - HelloWorldFunctionRole
-      - Arn
+      Fn::Sub: https://${TranslateAPI}.execute-api.${AWS::Region}.amazonaws.com/dev/translate/
