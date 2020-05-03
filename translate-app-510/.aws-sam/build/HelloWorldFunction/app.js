@@ -1,9 +1,10 @@
 const AWS = require("aws-sdk");
 const Translate = new AWS.Translate({region: "ap-northeast-1"});
+const docClient = new AWS.DynamoDB.DocumentClient({region: "ap-northeast-1"});
 
 exports.lambdaHandler = async (event, context) => {
 
-    console.log(event);
+    // console.log(event);
 
     let output_text;
 
@@ -27,6 +28,18 @@ exports.lambdaHandler = async (event, context) => {
             });
         });
 
+        const params = {
+            TableName: 'translate-history-2',
+            Item:{
+                "timestamp": new Date().getTime().toString()
+            }
+        };
+
+        await new Promise(resolve => {
+            docClient.put(params, (err,data) => {
+                resolve(data);
+            });
+        })
 
     } catch (err) {
         console.log(err);
@@ -36,7 +49,8 @@ exports.lambdaHandler = async (event, context) => {
     return {
         "statusCode": 200,
         "body": JSON.stringify({
-            output_text
+            output_text,
+            message: "頑張っているね！"
         })
     }
 };
