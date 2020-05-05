@@ -65,6 +65,13 @@ await new Promise(resolve => {
 })
 ```
 
+# S3バケットを作る
+
+```
+- DeletionPolicy: "Retain"としてCloudFormationの削除でエラーが出ないようにする
+- バケットポリシーをS3バケット同様にResourcesで作成する
+```
+
 
 
 # インストール
